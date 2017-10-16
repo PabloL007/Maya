@@ -5,10 +5,16 @@
 lazy val Maya =
   project
     .in(file("."))
-    .enablePlugins(AutomateHeaderPlugin, GitVersioning)
     .settings(settings)
     .settings(
       libraryDependencies ++= Seq(
+        library.akka,
+        library.akkaHttp,
+        library.akkaSl4j,
+        library.janalyseSsh,
+        library.json4sNative,
+        library.quartz,
+        library.logbackClassic,
         library.scalaCheck % Test,
         library.scalaTest  % Test
       )
@@ -21,9 +27,22 @@ lazy val Maya =
 lazy val library =
   new {
     object Version {
+      val akka = "2.4.20"
+      val akkaHttp = "10.0.10"
+      val logbackClassic = "1.2.3"
       val scalaCheck = "1.13.5"
+      val janalyseSsh = "0.10.3"
+      val json4sNative = "3.5.3"
+      val quartz = "1.6.0-akka-2.4.x"
       val scalaTest  = "3.0.3"
     }
+    val akka = "com.typesafe.akka" %% "akka-actor" % Version.akka
+    val akkaHttp = "com.typesafe.akka" %% "akka-http" % Version.akkaHttp
+    val akkaSl4j =  "com.typesafe.akka" %% "akka-slf4j" % Version.akka
+    val janalyseSsh = "fr.janalyse" %% "janalyse-ssh" % Version.janalyseSsh
+    val json4sNative = "org.json4s" %% "json4s-native" % Version.json4sNative
+    val logbackClassic = "ch.qos.logback" % "logback-classic" % Version.logbackClassic
+    val quartz = "com.enragedginger" %% "akka-quartz-scheduler" % Version.quartz
     val scalaCheck = "org.scalacheck" %% "scalacheck" % Version.scalaCheck
     val scalaTest  = "org.scalatest"  %% "scalatest"  % Version.scalaTest
   }
@@ -33,13 +52,11 @@ lazy val library =
 // *****************************************************************************
 
 lazy val settings =
-  commonSettings ++
-  gitSettings ++
-  scalafmtSettings
+  commonSettings
 
 lazy val commonSettings =
   Seq(
-    scalaVersion := "2.12.3",
+    scalaVersion := "2.11.11",
     organization := "com.mutantpaper",
     organizationName := "Pablo Ley",
     startYear := Some(2017),
@@ -57,15 +74,3 @@ lazy val commonSettings =
       s"[$project]> "
     }
 )
-
-lazy val gitSettings =
-  Seq(
-    git.useGitDescribe := true
-  )
-
-lazy val scalafmtSettings =
-  Seq(
-    scalafmtOnCompile := true,
-    scalafmtOnCompile.in(Sbt) := false,
-    scalafmtVersion := "1.1.0"
-  )
