@@ -16,7 +16,7 @@ object Messages {
     }
   }
   object Call{
-    val regex: Regex = """(.+)\.(.+)\((.*)\)""".r
+    val regex: Regex = """(\w+)\.(\w+)\((.*)\)""".r
     def fromString(str: String): Call = str match {
       case regex(module, method, arguments) => Call(module, method, arguments.split(',').toList)
     }

@@ -10,12 +10,13 @@ object Main extends App {
   implicit val system = ActorSystem("Maya")
   implicit val materializer = ActorMaterializer()
 
-  val scheduler = QuartzSchedulerExtension(system)
+  val scheduler: QuartzSchedulerExtension = QuartzSchedulerExtension(system)
 
   val modules: Map[String, ActorRef] = Map(
     "core" -> system.actorOf(Core.props(), "core"),
     "rest" -> system.actorOf(Rest.props(), "rest"),
-    "ssh" -> system.actorOf(Ssh.props(), "ssh")
+    "ssh" -> system.actorOf(Ssh.props(), "ssh"),
+    "scheduler" -> system.actorOf(Scheduler.props(scheduler), "scheduler")
   )
 
   val bindingFuture = Http().bindAndHandle(Routes.getRoute(modules("core")), "localhost", 8080)

@@ -46,7 +46,7 @@ class Core extends MModule {
     case Request(meta, input) => interpret(skills.toList, meta, input) match {
       case Some(operation) =>
         sender() ! "started"
-        context.system.actorSelection("user/" + operation.current.module) ! operation
+        context.system.actorSelection(s"user/${operation.current.module}") ! operation
       case None =>
         sender() ! "error"
         log.warning("No operation could be extracted")
