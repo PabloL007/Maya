@@ -9,14 +9,13 @@ import scala.concurrent.Await
 import scala.concurrent.duration._
 
 object Rest {
-  def props(): Props = {
+  def props(): Props =
     Props(new Rest())
-  }
 }
 
 class Rest extends MModule {
   implicit val blockingDispatcher = context.system.dispatchers.lookup("blocking-dispatcher")
-  implicit val materializer = ActorMaterializer()(context.system)
+  implicit val materializer       = ActorMaterializer()(context.system)
 
   def get(arguments: List[String]): String = arguments match {
     case url :: Nil =>
@@ -24,7 +23,7 @@ class Rest extends MModule {
     case _ => "error"
   }
 
-  val name = "rest"
+  val name    = "rest"
   val methods = Map("get" -> get _)
 
   log.info(s"$name module started")

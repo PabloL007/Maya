@@ -1,9 +1,9 @@
 package com.mutantpaper.maya.modules
 
 import java.io.File
-import java.nio.file.{Files, Paths}
+import java.nio.file.{ Files, Paths }
 
-import akka.actor.{Actor, ActorLogging, Props}
+import akka.actor.{ Actor, ActorLogging, Props }
 import com.mutantpaper.maya.Messages._
 import fr.janalyse.ssh.SSH
 import org.json4s.DefaultFormats
@@ -12,9 +12,8 @@ import org.json4s.native.Serialization
 import org.json4s.native.Serialization.read
 
 object Ssh {
-  def props(): Props = {
+  def props(): Props =
     Props(new Ssh())
-  }
 
   case class ServerConfig(alias: String, host: String, user: String, pass: String)
   case class SafeServerConfig(alias: String, host: String, user: String)
@@ -28,14 +27,15 @@ class Ssh() extends MModule {
   // Load config from file
   val configFile = new File("ssh.json")
 
-  var servers: Map[String, ServerConfig] = if(configFile.exists()){
+  var servers: Map[String, ServerConfig] = if (configFile.exists()) {
     read[Set[SafeServerConfig]](new String(Files.readAllBytes(Paths.get(configFile.getPath))))
       .map { s =>
         println(s"Input key for ${s.alias}:")
         val pass: String = new String(standardIn.readPassword())
         ServerConfig(s.alias, s.host, s.user, pass)
       }
-      .map(s => (s.alias,s)).toMap
+      .map(s => (s.alias, s))
+      .toMap
   } else {
     Map.empty[String, ServerConfig]
   }
@@ -55,7 +55,7 @@ class Ssh() extends MModule {
     case _ => "error"
   }
 
-  val name = "ssh"
+  val name    = "ssh"
   val methods = Map("execute" -> execute _)
 
   log.info(s"$name module started")

@@ -1,7 +1,7 @@
 package com.mutantpaper.maya
 
 import akka.actor.ActorRef
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
+import akka.http.scaladsl.model.{ ContentTypes, HttpEntity }
 import akka.http.scaladsl.server.Directives._
 import akka.util.Timeout
 import com.mutantpaper.maya.Messages.MetaData
