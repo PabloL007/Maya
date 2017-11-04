@@ -3,12 +3,10 @@ package com.mutantpaper.maya.modules
 import java.io.File
 import java.nio.file.{ Files, Paths }
 
-import akka.actor.{ Actor, ActorLogging, Props }
-import com.mutantpaper.maya.Messages._
+import akka.actor.Props
 import fr.janalyse.ssh.SSH
 import org.json4s.DefaultFormats
 import org.json4s._
-import org.json4s.native.Serialization
 import org.json4s.native.Serialization.read
 
 object Ssh {

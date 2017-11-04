@@ -61,11 +61,17 @@ lazy val commonSettings =
     organizationName := "Pablo Ley",
     startYear := Some(2017),
     scalacOptions ++= Seq(
+      "-target:jvm-1.8",
+      "-encoding", "UTF-8",
       "-unchecked",
       "-deprecation",
-      "-language:_",
-      "-target:jvm-1.8",
-      "-encoding", "UTF-8"
+      "-Yno-adapted-args",
+      "-Ywarn-dead-code",
+      "-Ywarn-numeric-widen",
+      "-Ywarn-value-discard",
+      "-Ywarn-unused",
+      "-Ywarn-unused-import",
+      "-language:_"
     ),
     unmanagedSourceDirectories.in(Compile) := Seq(scalaSource.in(Compile).value),
     unmanagedSourceDirectories.in(Test) := Seq(scalaSource.in(Test).value),

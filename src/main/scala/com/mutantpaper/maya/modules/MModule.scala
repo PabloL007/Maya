@@ -8,7 +8,7 @@ trait MModule extends Actor with ActorLogging {
   val methods: Map[String, (List[String]) => String]
 
   def invoke(operation: Operation): Option[Operation] = {
-    val Call(module, method, arguments) = operation.current
+    val Call(_, method, _) = operation.current
     operation.next(
       methods(method)(operation.current.getArguments(operation.arguments, operation.results, operation.meta))
     )
