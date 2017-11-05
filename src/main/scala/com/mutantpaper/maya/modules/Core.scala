@@ -22,7 +22,7 @@ object Core {
     */
   def interpret(skills: List[Skill], meta: MetaData, input: String): Option[Operation] =
     skills.filter(s => input.matches(s.regex)) match {
-      case head :: rest =>
+      case head :: _ =>
         val matcher = Pattern.compile(head.regex).matcher(input)
         matcher.matches()
         Some(
@@ -50,15 +50,16 @@ class Core extends MModule {
     * Module method for parsing Maya SDL (Skill Definition Language) into actual skill objects.
     *
     * @param arguments MSDL string :: Nil
-    * @return Always returns done
+    * @return The new skill's id
     */
   def learn(arguments: List[String]): String = {
     log.info(arguments.toString())
     val procedure = arguments.head.split(" -> ").map { call =>
       Call.fromString(call)
     }
-    skills += Skill(UUID.randomUUID(), procedure.head.module, procedure.head.arguments.head, procedure.tail.toList)
-    "done"
+    val id = UUID.randomUUID()
+    skills += Skill(id, procedure.head.module, procedure.head.arguments.head, procedure.tail.toList)
+    id.toString
   }
 
   val name    = "core"
@@ -86,7 +87,7 @@ class Core extends MModule {
           log.warning("No operation could be extracted")
       }
   }
-  override def receive = customReceive orElse super[MModule].receive
+  override def receive: Receive = customReceive orElse super[MModule].receive
 
   log.info(s"$name module started")
 }

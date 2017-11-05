@@ -16,6 +16,10 @@ object Ssh {
   case class ServerConfig(alias: String, host: String, user: String, pass: String)
   case class SafeServerConfig(alias: String, host: String, user: String)
 }
+
+/**
+  * Ssh module: Used for executing commands on remote machines.
+  */
 class Ssh() extends MModule {
   import Ssh._
   implicit val formats = DefaultFormats
@@ -38,6 +42,13 @@ class Ssh() extends MModule {
     Map.empty[String, ServerConfig]
   }
 
+  /**
+    * Module method for executing simple commands in known remote machines.
+    *
+    * @param arguments Server alias :: Command to execute :: Nil
+    * @return The output of the command or the word error if the number of arguments was incorrect or the alias was not
+    *         recognized
+    */
   def execute(arguments: List[String]): String = arguments match {
     case alias :: command :: Nil =>
       servers.get(alias) match {

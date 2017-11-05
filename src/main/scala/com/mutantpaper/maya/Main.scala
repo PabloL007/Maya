@@ -5,10 +5,12 @@ import com.mutantpaper.maya.modules._
 import com.typesafe.akka.extension.quartz.QuartzSchedulerExtension
 import akka.http.scaladsl.Http
 import akka.stream.ActorMaterializer
+import com.typesafe.config.ConfigFactory
 
 object Main extends App {
-  implicit val system       = ActorSystem("Maya")
-  implicit val materializer = ActorMaterializer()
+  implicit val system: ActorSystem             = ActorSystem("Maya")
+  implicit val materializer: ActorMaterializer = ActorMaterializer()
+  val conf                                     = ConfigFactory.load()
 
   val scheduler: QuartzSchedulerExtension = QuartzSchedulerExtension(system)
 
@@ -19,5 +21,8 @@ object Main extends App {
     "scheduler" -> system.actorOf(Scheduler.props(scheduler), "scheduler")
   )
 
-  val bindingFuture = Http().bindAndHandle(Routes.getRoute(modules("core")), "localhost", 8080)
+  val host = conf.getString("maya.host")
+  val port = conf.getInt("maya.port")
+
+  val bindingFuture = Http().bindAndHandle(Routes.getRoute(modules("core")), host, port)
 }

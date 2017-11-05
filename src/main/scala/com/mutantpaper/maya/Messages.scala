@@ -29,8 +29,8 @@ object Messages {
   case class Skill(id: UUID, source: String, regex: String, procedure: List[Call])
   case class Operation(id: UUID, meta: MetaData, arguments: List[String], results: List[String], todo: List[Call]) {
     def next(newResult: String): Option[Operation] = todo match {
-      case head :: Nil => None
-      case _ :: tail   => Some(Operation(id, meta, arguments, newResult :: results, tail))
+      case _ :: Nil  => None
+      case _ :: tail => Some(Operation(id, meta, arguments, newResult :: results, tail))
     }
     def current: Call = todo.head
   }

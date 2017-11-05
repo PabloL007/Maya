@@ -13,10 +13,20 @@ object Rest {
     Props(new Rest())
 }
 
+/**
+  * Rest module: Used for interacting with rest APIs.
+  */
 class Rest extends MModule {
-  implicit val blockingDispatcher = context.system.dispatchers.lookup("blocking-dispatcher")
-  implicit val materializer       = ActorMaterializer()(context.system)
+  // It is recommended to use a different dispatcher for performing blocking operations
+  implicit val blockingDispatcher              = context.system.dispatchers.lookup("blocking-dispatcher")
+  implicit val materializer: ActorMaterializer = ActorMaterializer()(context.system)
 
+  /**
+    * Module method for performing http GET operations
+    *
+    * @param arguments Complete url :: Nil
+    * @return The data retrieved from the endpoint or the word error if the number of arguments was incorrect
+    */
   def get(arguments: List[String]): String = arguments match {
     case url :: Nil =>
       Await.result(Http()(context.system).singleRequest(HttpRequest(uri = url)), 10 seconds).entity.toString
