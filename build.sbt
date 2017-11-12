@@ -57,7 +57,7 @@ lazy val settings =
 
 lazy val commonSettings =
   Seq(
-    version := "0.1.0-SNAPSHOT",
+    version := "0.1.0",
     scalaVersion := "2.11.11",
     organization := "com.mutantpaper",
     organizationName := "Pablo Ley",

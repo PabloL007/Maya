@@ -1,1 +1,0 @@
-Learn {{hipchat.receive("How many items are in (.+) on (.+)") -> ssh.execute($2, "ls -lah $1 | wc -l") -> hipchat.send("There are $result items in $1")}}

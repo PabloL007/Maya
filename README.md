@@ -1,16 +1,17 @@
-# Maya
+# Maya v0.1.0
 
 Welcome to the Maya project!
 
 Working in the operations department of a company I've noticed how much time is spent connecting to remote machines to 
-obtain answers for simple questions. You're working on something when you get a message from someone asking about free
-disk space or the number of events received in the last week or what version is deployed of a certain component. So you
-stop what you're doing, connect to the machine, execute the same set of commands and paste it into the chat. What if all
-of this could be done automatically?
+obtain answers for simple questions. Things that eventually make it into the alert system or a grafana dashboard after
+a Jira ticket is created and someone has the time to do it. But what if, as a developer, you could just automate the
+execution of those commands sitting in a text file on your pc using regex and your company's messaging app?
 
-This is where Maya comes in with it's Skill Definition Language (MSDL for short). Just define the regex it should look for,
-the process it should follow and then start using it. No restarts, no editing config files, just send it a message
-teaching it the skill and it'll learn it.
+This is where Maya comes in with it's Skill Definition Language (MSDL for short). Just define the regex it should look
+for, the process it should follow and then start using it by sending messages.
+
+Currently, it can only receive messages through a rest API but integration with messaging apps like hipchat will come
+shortly. 
 
 ## Maya SDL
 
@@ -87,8 +88,8 @@ In MSDL there are several variables that can be included in arguments:
 ### Configuration
 
 Some modules can be initialized with external configuration files, currently the ssh module is the only one. To provide
-a list of ssh servers to be used with Maya place a file called ssh.json in the root of the project dir (or map it to be 
-placed inside /opt/docker if using the container) with the servers defined like so:
+a list of ssh servers to be used with Maya, place a file named `ssh.json` in the root of the project dir (or map it to 
+be placed inside `/opt/docker` if using the container) with the servers defined like so:
 
 ```json
 [
@@ -105,6 +106,8 @@ placed inside /opt/docker if using the container) with the servers defined like 
 ]
 ```
 
+The password for these servers will have to be inputted upon initialization of the ssh module through the console.
+
 ### API
 
 As this is still a work in progress there are currently no integrations implemented for chat apps, so to interact with
@@ -115,11 +118,11 @@ message in the body.
 
 This application can be run as a docker, to create the container simply use the following command:
 
-```
+```bash
 sbt docker:publishLocal
 ```
-And for executing it this will do:
-```
+And for executing it, this will do:
+```bash
 docker run -it --rm -p 8080:8080 -e "HOST=0.0.0.0" maya:0.1.0
 ```
 
