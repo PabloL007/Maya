@@ -33,3 +33,6 @@ snapshots
 
 # Log files
 *.log
+
+# Module config files
+*.json
