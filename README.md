@@ -86,13 +86,42 @@ In MSDL there are several variables that can be included in arguments:
 
 ### Configuration
 
+Some modules can be initialized with external configuration files, currently the ssh module is the only one. To provide
+a list of ssh servers to be used with Maya place a file called ssh.json in the root of the project dir (or map it to be 
+placed inside /opt/docker if using the container) with the servers defined like so:
 
+```json
+[
+  {
+    "alias": "heartOfGold",
+    "host": "192.168.1.2",
+    "user": "guest"
+  },
+  {
+    "alias": "bbbb",
+    "host": "orders.bigbangburgerbar.com",
+    "user": "Arthur"
+  }
+]
+```
 
 ### API
 
 As this is still a work in progress there are currently no integrations implemented for chat apps, so to interact with
 maya you will need a tool like postman or curl. Just send a POST request to the `/api/operations` endpoint with the 
 message in the body.
+
+### Docker
+
+This application can be run as a docker, to create the container simply use the following command:
+
+```
+sbt docker:publishLocal
+```
+And for executing it this will do:
+```
+docker run -it --rm -p 8080:8080 -e "HOST=0.0.0.0" maya:0.1.0
+```
 
 ## Dependencies
 

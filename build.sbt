@@ -5,6 +5,7 @@
 lazy val Maya =
   project
     .in(file("."))
+    .enablePlugins(JavaAppPackaging, AshScriptPlugin)
     .settings(settings)
     .settings(
       libraryDependencies ++= Seq(
@@ -52,7 +53,7 @@ lazy val library =
 // *****************************************************************************
 
 lazy val settings =
-  commonSettings
+  commonSettings ++ dockerSettings
 
 lazy val commonSettings =
   Seq(
@@ -80,4 +81,9 @@ lazy val commonSettings =
       val project = Project.extract(state).currentRef.project
       s"[$project]> "
     }
-)
+  )
+
+lazy val dockerSettings =
+  Seq(
+    dockerBaseImage := "openjdk:8-jre-alpine"
+  )
