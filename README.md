@@ -1,6 +1,7 @@
 # Maya v0.1.0
 
 [![Build Status](https://travis-ci.org/PabloL007/Maya.svg?branch=develop)](https://travis-ci.org/PabloL007/Maya)
+[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/MayaTheBot/Lobby)
 
 Welcome to the Maya project!
 
