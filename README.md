@@ -1,5 +1,7 @@
 # Maya v0.1.0
 
+[![Build Status](https://travis-ci.org/PabloL007/Maya.svg?branch=develop)](https://travis-ci.org/PabloL007/Maya)
+
 Welcome to the Maya project!
 
 Working in the operations department of a company I've noticed how much time is spent connecting to remote machines to 
