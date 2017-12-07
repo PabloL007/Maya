@@ -9,6 +9,8 @@ import org.json4s.DefaultFormats
 import org.json4s._
 import org.json4s.native.Serialization.read
 
+import scala.concurrent.Future
+
 object Ssh {
   def props(): Props =
     Props(new Ssh())
@@ -46,22 +48,23 @@ class Ssh() extends MModule {
     * Module method for executing simple commands in known remote machines.
     *
     * @param arguments Server alias :: Command to execute :: Nil
-    * @return The output of the command or the word error if the number of arguments was incorrect or the alias was not
+    * @return The output of the command or an exception if the number of arguments was incorrect or the alias was not
     *         recognized
     */
-  def execute(arguments: List[String]): String = arguments match {
+  def execute(arguments: List[String]): Future[String] = arguments match {
     case alias :: command :: Nil =>
       servers.get(alias) match {
         case Some(sc) =>
           log.debug(s"Ssh module received command: $command for $alias")
           SSH.once(sc.host, sc.user, sc.pass) { ssh =>
-            ssh.execute(command)
+            Future.successful(ssh.execute(command))
           }
         case None =>
           log.warning(s"Ssh module received command ($command) for unknown host ($alias)")
-          "error"
+          Future.failed(new Exception(s"Server with alias $alias has not been configured"))
       }
-    case _ => "error"
+    case _ =>
+      Future.failed(new Exception(s"Wrong number of arguments for execute method, found ${arguments.size} needed 2"))
   }
 
   val name    = "ssh"

@@ -7,6 +7,7 @@ import akka.actor.Props
 import com.mutantpaper.maya.Messages._
 
 import scala.collection.mutable.ListBuffer
+import scala.concurrent.Future
 
 object Core {
   def props(): Props =
@@ -52,14 +53,14 @@ class Core extends MModule {
     * @param arguments MSDL string :: Nil
     * @return The new skill's id
     */
-  def learn(arguments: List[String]): String = {
+  def learn(arguments: List[String]): Future[String] = {
     log.info(arguments.toString())
     val procedure = arguments.head.split(" -> ").map { call =>
       Call.fromString(call)
     }
     val id = UUID.randomUUID()
     skills += Skill(id, procedure.head.module, procedure.head.arguments.head, procedure.tail.toList)
-    id.toString
+    Future.successful(id.toString)
   }
 
   val name    = "core"

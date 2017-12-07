@@ -3,6 +3,7 @@ package com.mutantpaper.maya
 import java.util.UUID
 import java.util.regex.Matcher
 
+import scala.collection.mutable.ListBuffer
 import scala.util.matching.Regex
 
 object Messages {
@@ -22,8 +23,31 @@ object Messages {
   }
   object Call {
     val regex: Regex = """(\w+)\.(\w+)\((.*)\)""".r
+    def splitArgs(string: String): List[String] = {
+      var buffer: String          = ""
+      val res: ListBuffer[String] = ListBuffer.empty[String]
+      var incomplete: Int         = 0
+
+      string.foreach {
+        case '{' =>
+          incomplete += 1
+          buffer += "{"
+        case '}' =>
+          incomplete -= 1
+          buffer += "}"
+        case ',' if incomplete != 0 =>
+          buffer += ","
+        case ',' if incomplete == 0 =>
+          res.append(buffer)
+          buffer = ""
+        case c: Char =>
+          buffer += c
+      }
+      res.append(buffer)
+      res.toList
+    }
     def fromString(str: String): Call = str match {
-      case regex(module, method, arguments) => Call(module, method, arguments.split(',').toList)
+      case regex(module, method, arguments) => Call(module, method, splitArgs(arguments))
     }
   }
   case class Skill(id: UUID, source: String, regex: String, procedure: List[Call])

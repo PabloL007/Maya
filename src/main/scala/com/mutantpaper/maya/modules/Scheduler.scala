@@ -6,6 +6,9 @@ import akka.actor.Props
 import com.mutantpaper.maya.Messages.Operation
 import com.typesafe.akka.extension.quartz.QuartzSchedulerExtension
 
+import scala.concurrent.Future
+import scala.util.{ Failure, Success }
+
 object Scheduler {
   def props(quartzExtension: QuartzSchedulerExtension): Props =
     Props(new Scheduler(quartzExtension))
@@ -24,15 +27,18 @@ class Scheduler(quartzExtension: QuartzSchedulerExtension) extends MModule {
     * @param arguments Quartz cron expression :: Nil
     * @return A date in the form of a string, which indicates the first time the task will be performed
     */
-  def schedule(arguments: List[String]): String = arguments match {
+  def schedule(arguments: List[String]): Future[String] = arguments match {
     case cron :: Nil =>
       val desc = s"Custom-${UUID.randomUUID()}"
       val op   = currOp.copy().next(cron).get
       quartzExtension.createSchedule(name = desc, cronExpression = cron)
-      quartzExtension
-        .schedule(name = desc, receiver = context.system.actorSelection(s"user/${op.current.module}"), msg = op)
-        .toString
-    case _ => "error"
+      Future.successful(
+        quartzExtension
+          .schedule(name = desc, receiver = context.system.actorSelection(s"user/${op.current.module}"), msg = op)
+          .toString
+      )
+    case _ =>
+      Future.failed(new Exception(s"Wrong number of arguments for schedule method, found ${arguments.size} needed 1"))
   }
 
   val name    = "scheduler"
@@ -46,6 +52,12 @@ class Scheduler(quartzExtension: QuartzSchedulerExtension) extends MModule {
       currOp = op
       invoke(op) match {
         case _ => log.debug(s"finished op ($op)")
+      }
+
+      invoke(op) onComplete {
+        case Success(result) =>
+          log.debug(s"The operation ($op) was scheduled successfully, next run will take place at $result")
+        case Failure(ex) => log.error(ex, s"The operation ($op) failed with error: ${ex.getMessage}")
       }
   }
   override def receive: Receive = customReceive orElse super[MModule].receive

@@ -52,7 +52,8 @@ Currently, the following modules and methods are available when defining new ski
     - `learn(MSDL string)`: Will return the UUID of the new skill.
 
 - `rest`:
-    - `get(Complete url)`: Will return the body of the page as a String.
+    - `get(Complete url, Headers with format key:value (Optional))`: Will return the body of the page as a string.
+    - `post(Complete url, Content type, Body of the request, Headers with format key:value (Optional))`: Will return the body of the response as a string.
 
 - `scheduler`:
     - `schedule(Quartz cron expression)`: Will execute the rest of the skill every time the trigger is fired. 
@@ -84,6 +85,16 @@ In MSDL there are several variables that can be included in arguments:
     - command:
     ```
     write http://www.google.com in foo
+    ```
+    
+- Post a note to pushbullet:
+    - skill:
+    ```
+    learn {{core.in(post note with title "(.+)" and content "(.+)") -> rest.post(https://api.pushbullet.com/v2/pushes,application/json,{"body":"$1","title":"$0","type":"note"},Access-Token:x.xxxxxxxxxxxxxxx)}}
+    ```
+    - command:
+    ```
+    post note with title "Maya post test" and content "this is a test"
     ```
 
 ## Usage
