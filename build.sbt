@@ -14,6 +14,7 @@ lazy val Maya =
         library.akkaSl4j,
         library.janalyseSsh,
         library.json4sNative,
+        library.parserCombinators,
         library.quartz,
         library.logbackClassic,
         library.scalaCheck % Test,
@@ -34,6 +35,7 @@ lazy val library =
       val scalaCheck = "1.13.5"
       val janalyseSsh = "0.10.3"
       val json4sNative = "3.5.3"
+      val parserCombinators = "1.0.6"
       val quartz = "1.6.0-akka-2.4.x"
       val scalaTest  = "3.0.3"
     }
@@ -43,6 +45,7 @@ lazy val library =
     val janalyseSsh = "fr.janalyse" %% "janalyse-ssh" % Version.janalyseSsh
     val json4sNative = "org.json4s" %% "json4s-native" % Version.json4sNative
     val logbackClassic = "ch.qos.logback" % "logback-classic" % Version.logbackClassic
+    val parserCombinators = "org.scala-lang.modules" %% "scala-parser-combinators" % Version.parserCombinators
     val quartz = "com.enragedginger" %% "akka-quartz-scheduler" % Version.quartz
     val scalaCheck = "org.scalacheck" %% "scalacheck" % Version.scalaCheck
     val scalaTest  = "org.scalatest"  %% "scalatest"  % Version.scalaTest
