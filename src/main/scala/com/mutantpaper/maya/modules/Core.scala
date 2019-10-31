@@ -5,6 +5,7 @@ import java.util.regex.Pattern
 
 import akka.actor.Props
 import com.mutantpaper.maya.Messages._
+import com.mutantpaper.maya.MSDLParser
 
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.Future
@@ -55,12 +56,22 @@ class Core extends MModule {
     */
   def learn(arguments: List[String]): Future[String] = {
     log.info(arguments.toString())
+    /*
     val procedure = arguments.head.split(" -> ").map { call =>
       Call.fromString(call)
     }
     val id = UUID.randomUUID()
     skills += Skill(id, procedure.head.module, procedure.head.arguments.head, procedure.tail.toList)
     Future.successful(id.toString)
+    */
+    MSDLParser(arguments.head) match {
+      case Right(skill::tail) =>
+        log.info(skill.toString)
+        skills += Skill(skill.id, skill.source, skill.regex, skill.procedure.tail)
+        Future.successful(skill.id.toString)
+      case Left(error) =>
+        Future.failed(new Exception(error.toString))
+    }
   }
 
   val name    = "core"

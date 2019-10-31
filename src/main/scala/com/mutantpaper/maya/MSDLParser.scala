@@ -7,7 +7,7 @@ import scala.util.parsing.combinator.RegexParsers
 
 object MSDLParser extends RegexParsers {
   val test: String = """
-               core.in("post note with "title (.+) and content (.+)")
+               core.in("post note with title (.+) and content (.+)")
                  -> rest.post("https://api.pushbullet.com/v2/pushes","application/json","{body:$1,title:$0,type:note}","Access-Token:x.xxxxxxxxxxxxxxx");
 
                core.in("write (.+) in (.+)")
